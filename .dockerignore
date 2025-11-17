@@ -3,4 +3,5 @@ node_modules
 .gitignore
 Dockerfile
 docker/
+!docker/entrypoint.sh
 config.js

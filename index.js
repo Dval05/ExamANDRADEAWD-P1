@@ -2,7 +2,10 @@ const SUPABASE_CONFIG = (typeof window !== 'undefined' && window.SUPABASE_CONFIG
 const SUPABASE_URL = SUPABASE_CONFIG.url || 'https://tjpgshemougtrphoomqc.supabase.co';
 const SUPABASE_ANON_KEY = SUPABASE_CONFIG.anonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcGdzaGVtb3VndHJwaG9vbXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzNjczODYsImV4cCI6MjA3ODk0MzM4Nn0.94rnU4jBLM-euQUbTzZ36dtVq6LELRhM2njA4JuM-c8';
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let supabaseClient = null;
+if (typeof window !== 'undefined' && typeof window.supabase !== 'undefined') {
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
 
 const searchBtn = document.getElementById('searchBtn');
 const nameInput = document.getElementById('name');
@@ -58,6 +61,12 @@ function escapeHtml(unsafe) {
 async function searchCellphonesByQuery(query) {
   if (!query) {
     renderResults([]);
+    return;
+  }
+
+  if (!supabaseClient) {
+    console.error('Supabase SDK not loaded');
+    resultsDiv.innerHTML = '<p class="error">Supabase SDK failed to load. Check your internet connection or CDN URL.</p>';
     return;
   }
 
