@@ -16,5 +16,6 @@ EOF
 # Si quieres ver el contenido (útil para debugging), descomenta la línea siguiente:
 # echo "Generated config.js:" && cat /app/config.js
 
-# Arranca el servidor estático en el puerto 80
-exec http-server /app -p 80 -a 0.0.0.0 --silent
+# Arranca el servidor estático usando el puerto provisto por Render
+PORT=${PORT:-80}
+exec http-server /app -p "$PORT" -a 0.0.0.0 --silent
