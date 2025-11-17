@@ -1,6 +1,8 @@
 
-const SUPABASE_URL = 'https://tjpgshemougtrphoomqc.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcGdzaGVtb3VndHJwaG9vbXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzNjczODYsImV4cCI6MjA3ODk0MzM4Nn0.94rnU4jBLM-euQUbTzZ36dtVq6LELRhM2njA4JuM-c8';
+
+const SUPABASE_CONFIG = (typeof window !== 'undefined' && window.SUPABASE_CONFIG) || {};
+const SUPABASE_URL = SUPABASE_CONFIG.url || 'https://tjpgshemougtrphoomqc.supabase.co';
+const SUPABASE_ANON_KEY = SUPABASE_CONFIG.anonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcGdzaGVtb3VndHJwaG9vbXFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzNjczODYsImV4cCI6MjA3ODk0MzM4Nn0.94rnU4jBLM-euQUbTzZ36dtVq6LELRhM2njA4JuM-c8';
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -18,14 +20,15 @@ function renderResults(items) {
   ul.className = 'results-list';
   items.forEach(item => {
     const li = document.createElement('li');
-    // Formatea precios si existen
-    const price = (item.price !== null && item.price !== undefined) ? Number(item.price).toFixed(2) : '-';
-    const priceWithVat = (item.price_with_vat !== null && item.price_with_vat !== undefined) ? Number(item.price_with_vat).toFixed(2) : '-';
+  const price = (item.price !== null && item.price !== undefined) ? Number(item.price).toFixed(2) : '-';
+  const priceWithVat = (item.price_with_vat !== null && item.price_with_vat !== undefined) ? Number(item.price_with_vat).toFixed(2) : '-';
+  const priceVatAmount = (item.price_vat_amount !== null && item.price_vat_amount !== undefined) ? Number(item.price_vat_amount).toFixed(2) : '-';
 
-    li.innerHTML = `<strong>${escapeHtml(item.name || '')}</strong>` +
-                   `<div class="meta">ID: ${escapeHtml(item.id ? String(item.id) : '-')}` +
-                   ` | Precio: $${escapeHtml(String(price))}` +
-                   ` | Precio (con IVA 15%): $${escapeHtml(String(priceWithVat))}</div>`;
+  li.innerHTML = `<strong>${escapeHtml(item.name || '')}</strong>` +
+           `<div class="meta">ID: ${escapeHtml(item.id ? String(item.id) : '-')}` +
+           ` | Precio: $${escapeHtml(String(price))}` +
+           ` | IVA (0.15): $${escapeHtml(String(priceVatAmount))}` +
+           ` | Precio (con IVA 15%): $${escapeHtml(String(priceWithVat))}</div>`;
     ul.appendChild(li);
   });
 
@@ -63,14 +66,12 @@ async function searchProductsByName(name) {
   renderResults(data);
 }
 
-// Evento del botón
 searchBtn.addEventListener('click', async () => {
   const name = nameInput.value.trim();
   resultsDiv.innerHTML = '<p class="loading">Buscando...</p>';
   await searchProductsByName(name);
 });
 
-// Opcional: permitir buscar al presionar Enter dentro del campo
 nameInput.addEventListener('keydown', async (e) => {
   if (e.key === 'Enter') {
     e.preventDefault();

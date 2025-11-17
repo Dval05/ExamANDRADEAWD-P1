@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andrade Danna Exam</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to Andrade Danna's Exam Page</h1>
+
+    <form id="searchForm" action="/submit" method="post" onsubmit="return false;">
+        <h1>Find Products Form</h1>
+        <label for="name">Enter Name Producto:</label>
+        <input type="text" id="name" name="name" required>
+
+        <input type="button" id="searchBtn" value="Search">
+
+    </form>
+
+    <div id="results" class="results"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+        <script src="config.js"></script>
+        <script src="index.js"></script>
+</body> 
+</html>
